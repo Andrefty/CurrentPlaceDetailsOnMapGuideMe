@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -24,6 +26,7 @@ import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -101,6 +104,16 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        int PLACE_PICKER_REQUEST =1;
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -114,12 +127,15 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
             super.onSaveInstanceState(outState);
         }
     }
-
+    /**
+    For menu with places uncomment the next block
+    */
+/*
     /**
      * Sets up the options menu.
      * @param menu The options menu.
      * @return Boolean.
-     */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.current_place_menu, menu);
@@ -130,7 +146,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
      * Handles a click on the menu option to get a place.
      * @param item The menu item to handle.
      * @return Boolean.
-     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.option_get_place) {
@@ -138,7 +154,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         }
         return true;
     }
-
+*/
     /**
      * Manipulates the map when it's available.
      * This callback is triggered when the map is ready to be used.
@@ -406,7 +422,9 @@ public class MapsActivityCurrentPlace extends AppCompatActivity
         mMap.addMarker(new MarkerOptions()
                 .title(poi.name)
                 .position(poi.latLng)
-                .snippet(poi.placeId);
+                .snippet(poi.placeId));
     }
+
+
 }
 
